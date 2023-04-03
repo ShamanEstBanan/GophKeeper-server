@@ -1,1 +1,1 @@
-# ShamanEstBanan-GophKeeper-server
+# GophKeeper-server
