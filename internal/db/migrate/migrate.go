@@ -2,11 +2,9 @@ package migrate
 
 import (
 	"database/sql"
-	"embed"
 	"fmt"
-	"github.com/pressly/goose/v3"
-
 	_ "github.com/jackc/pgx/v4/stdlib"
+	"github.com/pressly/goose/v3"
 )
 
 type options struct {
@@ -19,18 +17,6 @@ type OptionsFunc func(opts *options)
 func WithPath(path string) OptionsFunc {
 	return func(opts *options) {
 		opts.path = path
-	}
-}
-
-func WithDriver(driver string) OptionsFunc {
-	return func(opts *options) {
-		opts.driverName = driver
-	}
-}
-
-func WithFs(fs embed.FS) OptionsFunc {
-	return func(opts *options) {
-		goose.SetBaseFS(fs)
 	}
 }
 
@@ -48,10 +34,12 @@ func Run(dsn string, opts ...OptionsFunc) error {
 		return fmt.Errorf("open database connection error: %w ", err)
 	}
 	defer func() { _ = sqlDB.Close() }()
-	curPath := "/Users/yunbaranik/go/src/service-tpl-diploma/internal/db/migrate/migrations/"
+
+	var curPath string
 	if o.path != "" {
 		curPath = o.path
 	}
+
 	if err = goose.Up(sqlDB, curPath); err != nil {
 		return fmt.Errorf("up migrations: %w", err)
 	}
