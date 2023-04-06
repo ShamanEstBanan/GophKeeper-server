@@ -1,0 +1,104 @@
+syntax = "proto3";
+
+package gophKeeper.proto;
+
+option go_package = "./";
+
+message SignUpRequest {
+  string login = 1;
+  string password = 2;
+}
+
+message SignUpResponse {
+}
+
+message LogInRequest {
+  string login = 1;
+  string password = 2;
+}
+
+message LogInResponse {
+  bool success = 1;
+}
+
+message GetAllRecordsRequest{
+}
+
+message GetAllRecordsResponse{
+  message Record{
+    string id = 1;
+    string name = 2;
+    string type = 3;
+  }
+  repeated Record records = 1;
+}
+
+message GetRecordsByTypeRequest{
+  string type = 1;
+}
+
+message GetRecordsByTypeResponse{
+  message Record{
+    string id = 1;
+    string name = 2;
+    string type = 3;
+  }
+  repeated Record records = 1;
+}
+
+message CreateRecordRequest{
+  string name = 1;
+  string type = 2;
+  bytes data = 3;
+}
+
+message CreateRecordResponse{
+  string id = 1;
+  string name = 2;
+  string type = 3;
+  bytes data = 4;
+}
+
+message GetRecordRequest{
+  string id = 1;
+}
+
+message GetRecordResponse{
+  string id = 1;
+  string name = 2;
+  string type = 3;
+  bytes data = 4;
+}
+
+message EditRecordRequest{
+  string id = 1;
+  string name = 2;
+  string type = 3;
+  bytes data = 4;
+}
+
+message EditRecordResponse{
+  string id = 1;
+  string name = 2;
+  string type = 3;
+  bytes data = 4;
+}
+
+message DeleteRecordRequest{
+  string id = 1;
+}
+
+message DeleteRecordResponse{
+}
+
+service KeeperService {
+  rpc SignUp(SignUpRequest) returns (SignUpResponse);
+  rpc LogIn(LogInRequest) returns (LogInResponse);
+  rpc GetAllRecords(GetAllRecordsRequest) returns (GetAllRecordsResponse);
+  rpc GetRecordsByType(GetRecordsByTypeRequest) returns (GetRecordsByTypeResponse);
+  rpc CreateRecord(CreateRecordRequest) returns (CreateRecordResponse);
+  rpc GetRecord(GetRecordRequest) returns (GetRecordResponse);
+  rpc EditRecord(EditRecordRequest) returns (EditRecordResponse);
+  rpc DeleteRecord(DeleteRecordRequest) returns (DeleteRecordResponse);
+
+}
