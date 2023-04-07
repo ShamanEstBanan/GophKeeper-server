@@ -3,13 +3,12 @@ package service
 import (
 	"ShamanEstBanan-GophKeeper-server/internal/domain/entity"
 	"context"
-	"errors"
 	"go.uber.org/zap"
 )
 
 type storage interface {
 	CreateUser(context.Context, *entity.User) error
-	AuthenticateUser(context.Context, entity.User) (*entity.User, error)
+	AuthenticateUser(context.Context, *entity.User) (entity.UserID, error)
 	GetAllRecords(context.Context, entity.UserID) ([]entity.Record, error)
 }
 
@@ -23,34 +22,6 @@ func New(lg *zap.Logger, storage storage) *service {
 		lg:      lg,
 		storage: storage,
 	}
-}
-
-func (s *service) SignUp(ctx context.Context, user *entity.User) error {
-	err := ValidateUser(user)
-	if err != nil {
-		s.lg.Error("Validation error:", zap.Error(err))
-		return err
-	}
-	err = s.storage.CreateUser(ctx, user)
-	if err != nil {
-		s.lg.Error("Creation user error:", zap.Error(err))
-		return err
-	}
-	return nil
-}
-
-func ValidateUser(user *entity.User) error {
-	if user.Login == "" {
-		return errors.New("empty field Login")
-	}
-	if user.Password == "" {
-		return errors.New("empty field Password")
-	}
-	return nil
-}
-func (s *service) LogIn(ctx context.Context, request *entity.LogInRequest) (*entity.LogInResponse, error) {
-	//TODO implement me
-	panic("implement me")
 }
 
 func (s *service) GetAllRecords(ctx context.Context) (*entity.GetAllRecordsResponse, error) {

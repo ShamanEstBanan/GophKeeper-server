@@ -29,7 +29,7 @@ const (
 	KeeperService_DeleteRecord_FullMethodName     = "/gophKeeper.proto.KeeperService/DeleteRecord"
 )
 
-// KeeperServiceClient is the client API for KeeperService server.
+// KeeperServiceClient is the client API for KeeperService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type KeeperServiceClient interface {
@@ -123,7 +123,7 @@ func (c *keeperServiceClient) DeleteRecord(ctx context.Context, in *DeleteRecord
 	return out, nil
 }
 
-// KeeperServiceServer is the server API for KeeperService server.
+// KeeperServiceServer is the server API for KeeperService service.
 // All implementations must embed UnimplementedKeeperServiceServer
 // for forward compatibility
 type KeeperServiceServer interface {
@@ -168,7 +168,7 @@ func (UnimplementedKeeperServiceServer) DeleteRecord(context.Context, *DeleteRec
 }
 func (UnimplementedKeeperServiceServer) mustEmbedUnimplementedKeeperServiceServer() {}
 
-// UnsafeKeeperServiceServer may be embedded to opt out of forward compatibility for this server.
+// UnsafeKeeperServiceServer may be embedded to opt out of forward compatibility for this service.
 // Use of this interface is not recommended, as added methods to KeeperServiceServer will
 // result in compilation errors.
 type UnsafeKeeperServiceServer interface {
@@ -323,7 +323,7 @@ func _KeeperService_DeleteRecord_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-// KeeperService_ServiceDesc is the grpc.ServiceDesc for KeeperService server.
+// KeeperService_ServiceDesc is the grpc.ServiceDesc for KeeperService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var KeeperService_ServiceDesc = grpc.ServiceDesc{

@@ -18,7 +18,7 @@ message LogInRequest {
 }
 
 message LogInResponse {
-  bool success = 1;
+  string token = 1;
 }
 
 message GetAllRecordsRequest{
