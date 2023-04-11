@@ -19,8 +19,6 @@ import (
 const _ = grpc.SupportPackageIsVersion7
 
 const (
-	KeeperService_SignUp_FullMethodName           = "/gophKeeper.proto.KeeperService/SignUp"
-	KeeperService_LogIn_FullMethodName            = "/gophKeeper.proto.KeeperService/LogIn"
 	KeeperService_GetAllRecords_FullMethodName    = "/gophKeeper.proto.KeeperService/GetAllRecords"
 	KeeperService_GetRecordsByType_FullMethodName = "/gophKeeper.proto.KeeperService/GetRecordsByType"
 	KeeperService_CreateRecord_FullMethodName     = "/gophKeeper.proto.KeeperService/CreateRecord"
@@ -33,8 +31,6 @@ const (
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type KeeperServiceClient interface {
-	SignUp(ctx context.Context, in *SignUpRequest, opts ...grpc.CallOption) (*SignUpResponse, error)
-	LogIn(ctx context.Context, in *LogInRequest, opts ...grpc.CallOption) (*LogInResponse, error)
 	GetAllRecords(ctx context.Context, in *GetAllRecordsRequest, opts ...grpc.CallOption) (*GetAllRecordsResponse, error)
 	GetRecordsByType(ctx context.Context, in *GetRecordsByTypeRequest, opts ...grpc.CallOption) (*GetRecordsByTypeResponse, error)
 	CreateRecord(ctx context.Context, in *CreateRecordRequest, opts ...grpc.CallOption) (*CreateRecordResponse, error)
@@ -49,24 +45,6 @@ type keeperServiceClient struct {
 
 func NewKeeperServiceClient(cc grpc.ClientConnInterface) KeeperServiceClient {
 	return &keeperServiceClient{cc}
-}
-
-func (c *keeperServiceClient) SignUp(ctx context.Context, in *SignUpRequest, opts ...grpc.CallOption) (*SignUpResponse, error) {
-	out := new(SignUpResponse)
-	err := c.cc.Invoke(ctx, KeeperService_SignUp_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *keeperServiceClient) LogIn(ctx context.Context, in *LogInRequest, opts ...grpc.CallOption) (*LogInResponse, error) {
-	out := new(LogInResponse)
-	err := c.cc.Invoke(ctx, KeeperService_LogIn_FullMethodName, in, out, opts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
 }
 
 func (c *keeperServiceClient) GetAllRecords(ctx context.Context, in *GetAllRecordsRequest, opts ...grpc.CallOption) (*GetAllRecordsResponse, error) {
@@ -127,8 +105,6 @@ func (c *keeperServiceClient) DeleteRecord(ctx context.Context, in *DeleteRecord
 // All implementations must embed UnimplementedKeeperServiceServer
 // for forward compatibility
 type KeeperServiceServer interface {
-	SignUp(context.Context, *SignUpRequest) (*SignUpResponse, error)
-	LogIn(context.Context, *LogInRequest) (*LogInResponse, error)
 	GetAllRecords(context.Context, *GetAllRecordsRequest) (*GetAllRecordsResponse, error)
 	GetRecordsByType(context.Context, *GetRecordsByTypeRequest) (*GetRecordsByTypeResponse, error)
 	CreateRecord(context.Context, *CreateRecordRequest) (*CreateRecordResponse, error)
@@ -142,12 +118,6 @@ type KeeperServiceServer interface {
 type UnimplementedKeeperServiceServer struct {
 }
 
-func (UnimplementedKeeperServiceServer) SignUp(context.Context, *SignUpRequest) (*SignUpResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method SignUp not implemented")
-}
-func (UnimplementedKeeperServiceServer) LogIn(context.Context, *LogInRequest) (*LogInResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method LogIn not implemented")
-}
 func (UnimplementedKeeperServiceServer) GetAllRecords(context.Context, *GetAllRecordsRequest) (*GetAllRecordsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetAllRecords not implemented")
 }
@@ -177,42 +147,6 @@ type UnsafeKeeperServiceServer interface {
 
 func RegisterKeeperServiceServer(s grpc.ServiceRegistrar, srv KeeperServiceServer) {
 	s.RegisterService(&KeeperService_ServiceDesc, srv)
-}
-
-func _KeeperService_SignUp_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(SignUpRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(KeeperServiceServer).SignUp(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: KeeperService_SignUp_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KeeperServiceServer).SignUp(ctx, req.(*SignUpRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _KeeperService_LogIn_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(LogInRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(KeeperServiceServer).LogIn(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: KeeperService_LogIn_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(KeeperServiceServer).LogIn(ctx, req.(*LogInRequest))
-	}
-	return interceptor(ctx, in, info, handler)
 }
 
 func _KeeperService_GetAllRecords_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -330,14 +264,6 @@ var KeeperService_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "gophKeeper.proto.KeeperService",
 	HandlerType: (*KeeperServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
-		{
-			MethodName: "SignUp",
-			Handler:    _KeeperService_SignUp_Handler,
-		},
-		{
-			MethodName: "LogIn",
-			Handler:    _KeeperService_LogIn_Handler,
-		},
 		{
 			MethodName: "GetAllRecords",
 			Handler:    _KeeperService_GetAllRecords_Handler,

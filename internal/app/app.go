@@ -1,6 +1,14 @@
 package app
 
 import (
+	"ShamanEstBanan-GophKeeper-server/internal/server/authServer"
+	"context"
+	"crypto/tls"
+	"log"
+	"net"
+	"os/signal"
+	"syscall"
+
 	"ShamanEstBanan-GophKeeper-server/internal/config"
 	"ShamanEstBanan-GophKeeper-server/internal/db/migrate"
 	pb "ShamanEstBanan-GophKeeper-server/internal/proto"
@@ -8,12 +16,6 @@ import (
 	"ShamanEstBanan-GophKeeper-server/internal/service"
 	"ShamanEstBanan-GophKeeper-server/internal/storage"
 	"ShamanEstBanan-GophKeeper-server/pkg/logger"
-	"context"
-	"crypto/tls"
-	"log"
-	"net"
-	"os/signal"
-	"syscall"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"go.uber.org/zap"
@@ -58,15 +60,24 @@ func New() (*App, error) {
 	}
 	var s *grpc.Server
 	if cfg.Debug == true {
-		s = grpc.NewServer()
+		s = grpc.NewServer(grpc.UnaryInterceptor(server.AuthInterceptor))
+		//s = grpc.NewServer()
+
 	} else {
-		s = grpc.NewServer(grpc.Creds(tlsCredentials))
+		s = grpc.NewServer(
+			grpc.UnaryInterceptor(server.AuthInterceptor),
+			grpc.Creds(tlsCredentials),
+		)
 	}
 
 	// регистрируем сервис
 	pb.RegisterKeeperServiceServer(s, &server.KeeperService{
 		Service:                          newService,
 		UnimplementedKeeperServiceServer: pb.UnimplementedKeeperServiceServer{},
+	})
+	pb.RegisterAuthServiceServer(s, &authServer.AuthServer{
+		Service:                        newService,
+		UnimplementedAuthServiceServer: pb.UnimplementedAuthServiceServer{},
 	})
 	a := &App{
 		logger: l,

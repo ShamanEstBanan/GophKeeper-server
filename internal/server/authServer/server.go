@@ -1,4 +1,4 @@
-package server
+package authServer
 
 import (
 	"ShamanEstBanan-GophKeeper-server/internal/domain/entity"
@@ -14,7 +14,16 @@ import (
 	"log"
 )
 
-func (k *KeeperService) SignUp(ctx context.Context, in *pb.SignUpRequest) (*pb.SignUpResponse, error) {
+type service interface {
+	SignUp(context.Context, *entity.User) error
+	LogIn(context.Context, *entity.User) (string, error)
+}
+type AuthServer struct {
+	Service service
+	pb.UnimplementedAuthServiceServer
+}
+
+func (k *AuthServer) SignUp(ctx context.Context, in *pb.SignUpRequest) (*pb.SignUpResponse, error) {
 	var resp pb.SignUpResponse
 	user := &entity.User{
 		UserID:   "",
@@ -40,7 +49,7 @@ func (k *KeeperService) SignUp(ctx context.Context, in *pb.SignUpRequest) (*pb.S
 	return &resp, nil
 }
 
-func (k *KeeperService) LogIn(ctx context.Context, in *pb.LogInRequest) (*pb.LogInResponse, error) {
+func (k *AuthServer) LogIn(ctx context.Context, in *pb.LogInRequest) (*pb.LogInResponse, error) {
 	var resp pb.LogInResponse
 
 	mdReq, ok := metadata.FromIncomingContext(ctx)
@@ -70,7 +79,6 @@ func (k *KeeperService) LogIn(ctx context.Context, in *pb.LogInRequest) (*pb.Log
 
 	header := metadata.Pairs("jwt-token", token) //в key нельзя ставить пробел
 	err = grpc.SendHeader(ctx, header)
-	resp.Token = token
 
 	return &resp, nil
 }
