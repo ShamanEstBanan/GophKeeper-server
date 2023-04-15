@@ -5,11 +5,10 @@ import (
 	"ShamanEstBanan-GophKeeper-server/internal/errs"
 	"ShamanEstBanan-GophKeeper-server/internal/utils/authtoken"
 	"context"
-
 	"go.uber.org/zap"
 )
 
-func (s *service) SignUp(ctx context.Context, user *entity.User) error {
+func (s *service) CreateUser(ctx context.Context, user entity.User) error {
 	err := ValidateUser(user)
 	if err != nil {
 		s.lg.Error("Validation error:", zap.Error(err))
@@ -23,26 +22,26 @@ func (s *service) SignUp(ctx context.Context, user *entity.User) error {
 	return nil
 }
 
-func (s *service) LogIn(ctx context.Context, user *entity.User) (string, error) {
+func (s *service) AuthenticateUser(ctx context.Context, user entity.User) (*entity.UserID, error) {
 	err := ValidateUser(user)
 	if err != nil {
 		s.lg.Error("Validation error:", zap.Error(err))
-		return "", err
+		return nil, err
 	}
 	userID, err := s.storage.AuthenticateUser(ctx, user)
 	if err != nil {
 		s.lg.Error("Authenticate user error:", zap.Error(err))
-		return "", err
+		return nil, err
 	}
 	token, err := authtoken.GenerateToken(userID)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	return token, nil
+	return &token, nil
 }
 
-func ValidateUser(user *entity.User) error {
+func ValidateUser(user entity.User) error {
 	if user.Login == "" {
 		return errs.ErrLoginIsEmpty
 	}

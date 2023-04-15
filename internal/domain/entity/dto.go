@@ -2,7 +2,11 @@ package entity
 
 import "time"
 
-type UserID = string
+type (
+	UserID   = string
+	DataType = string
+	RecordID = string
+)
 
 type User struct {
 	UserID    UserID
@@ -27,9 +31,9 @@ type LogInResponse struct {
 }
 
 type RecordInfo struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
-	Type string `json:"type"`
+	Id   RecordID `json:"id"`
+	Name string   `json:"name"`
+	Type DataType `json:"type"`
 }
 type GetAllRecordsRequest struct {
 }
@@ -64,11 +68,11 @@ type GetRecordRequest struct {
 }
 
 type Record struct {
-	Id        string `json:"id"`
-	Name      string `json:"name"`
-	Type      string `json:"type"`
-	Data      []byte `json:"data"`
-	userID    string
+	Id        RecordID `json:"id"`
+	Name      string   `json:"name"`
+	Type      string   `json:"type"`
+	Data      []byte   `json:"data"`
+	UserID    string
 	createdAt time.Time
 	updatedAt time.Time
 }

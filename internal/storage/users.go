@@ -14,7 +14,7 @@ import (
 
 const defaultTimeout time.Duration = time.Millisecond * 500
 
-func (s *storage) CreateUser(ctx context.Context, user *entity.User) error {
+func (s *storage) CreateUser(ctx context.Context, user entity.User) error {
 	ctx, cancel := context.WithTimeout(ctx, defaultTimeout)
 	defer cancel()
 
@@ -32,7 +32,7 @@ func (s *storage) CreateUser(ctx context.Context, user *entity.User) error {
 	return nil
 }
 
-func (s *storage) AuthenticateUser(ctx context.Context, user *entity.User) (userID entity.UserID, err error) {
+func (s *storage) AuthenticateUser(ctx context.Context, user entity.User) (userID entity.UserID, err error) {
 	ctx, cancel := context.WithTimeout(ctx, defaultTimeout)
 	defer cancel()
 

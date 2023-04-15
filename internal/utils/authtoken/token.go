@@ -3,28 +3,30 @@ package authtoken
 import (
 	"ShamanEstBanan-GophKeeper-server/internal/errs"
 	"fmt"
-	"github.com/dgrijalva/jwt-go/v4"
+	"github.com/golang-jwt/jwt/v5"
 	"go.uber.org/zap"
 	"log"
 	"time"
 )
 
 // TODO убрать в env
-const signingKey = "BestCryptoSign"
+var signingKey = []byte("someSecret")
 
-type Claims struct {
-	jwt.StandardClaims
-	userID string
+type UserClaims struct {
+	UserID string `json:"UserID"`
+	jwt.RegisteredClaims
 }
 
 func GenerateToken(userID string) (string, error) {
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &Claims{
-		StandardClaims: jwt.StandardClaims{
-			IssuedAt: jwt.At(time.Now()),
+	claims := UserClaims{
+		UserID: userID,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(45 * time.Minute)),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
 		},
-		userID: userID,
-	})
-	stringToken, err := token.SignedString([]byte(signingKey))
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	stringToken, err := token.SignedString(signingKey)
 	if err != nil {
 		log.Println("Generate auth-token error: ", zap.Error(err))
 		return "", err
@@ -32,8 +34,8 @@ func GenerateToken(userID string) (string, error) {
 	return stringToken, nil
 }
 
-func ParseToken(userToken string) (userID string, err error) {
-	token, err := jwt.ParseWithClaims(userToken, &Claims{}, func(token *jwt.Token) (interface{}, error) {
+func ParseToken(userToken string) (uID string, err error) {
+	token, err := jwt.ParseWithClaims(userToken, &UserClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
@@ -42,8 +44,8 @@ func ParseToken(userToken string) (userID string, err error) {
 	if err != nil {
 		return "", err
 	}
-	if claims, ok := token.Claims.(*Claims); ok && token.Valid {
-		return claims.userID, nil
+	if claims, ok := token.Claims.(*UserClaims); ok && token.Valid {
+		return claims.UserID, nil
 	}
 	return "", errs.ErrInvalidAccessToken
 }

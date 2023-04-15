@@ -7,46 +7,16 @@ import (
 )
 
 type service interface {
-	SignUp(context.Context, *entity.User) error
-	LogIn(context.Context, *entity.User) (string, error)
-	GetAllRecords(context.Context) (*entity.GetAllRecordsResponse, error)
-	GetRecordsByType(context.Context, *entity.GetRecordsByTypeRequest) (*entity.GetRecordsByTypeResponse, error)
-	CreateRecord(context.Context, *entity.CreateRecordRequest) (*entity.CreateRecordResponse, error)
-	GetRecord(context.Context, *entity.GetRecordRequest) (*entity.GetRecordResponse, error)
-	EditRecord(context.Context, *entity.EditRecordRequest) (*entity.EditRecordResponse, error)
-	DeleteRecord(context.Context, *entity.DeleteRecordRequest) error
+	CreateUser(context.Context, entity.User) error
+	AuthenticateUser(context.Context, entity.User) (*entity.UserID, error)
+	GetAllRecords(context.Context, entity.UserID) (*[]entity.RecordInfo, error)
+	GetRecordsByType(ctx context.Context, userID entity.UserID, datatype entity.DataType) (*[]entity.RecordInfo, error)
+	CreateRecord(context.Context, entity.Record) (*entity.Record, error)
+	GetRecord(context.Context, entity.RecordID, entity.UserID) (*entity.Record, error)
+	UpdateRecord(context.Context, entity.Record) (*entity.Record, error)
+	DeleteRecord(context.Context, entity.RecordID, entity.UserID) error
 }
 type KeeperService struct {
 	Service service
 	pb.UnimplementedKeeperServiceServer
-}
-
-func (k *KeeperService) GetAllRecords(context.Context, *pb.GetAllRecordsRequest) (*pb.GetAllRecordsResponse, error) {
-
-	return nil, nil
-}
-
-func (k *KeeperService) GetRecordsByType(context.Context, *pb.GetRecordsByTypeRequest) (*pb.GetRecordsByTypeResponse, error) {
-
-	return nil, nil
-}
-
-func (k *KeeperService) CreateRecord(context.Context, *pb.CreateRecordRequest) (*pb.CreateRecordResponse, error) {
-
-	return nil, nil
-}
-
-func (k *KeeperService) GetRecord(context.Context, *pb.GetRecordRequest) (*pb.GetRecordResponse, error) {
-
-	return nil, nil
-}
-
-func (k *KeeperService) EditRecord(context.Context, *pb.EditRecordRequest) (*pb.EditRecordResponse, error) {
-
-	return nil, nil
-}
-
-func (k *KeeperService) DeleteRecord(context.Context, *pb.DeleteRecordRequest) (*pb.DeleteRecordResponse, error) {
-
-	return nil, nil
 }

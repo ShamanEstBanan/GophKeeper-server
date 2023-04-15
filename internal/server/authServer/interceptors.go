@@ -1,11 +1,10 @@
-package server
+package authServer
 
 import (
 	"ShamanEstBanan-GophKeeper-server/internal/errs"
 	"ShamanEstBanan-GophKeeper-server/internal/utils/authtoken"
 	"context"
 	"errors"
-	"fmt"
 	"log"
 	"strings"
 
@@ -18,7 +17,6 @@ import (
 func AuthInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 	var tokenFromReq string
 	methodInfo := info.FullMethod
-	fmt.Println(methodInfo)
 	md, ok := metadata.FromIncomingContext(ctx)
 	if strings.Contains(methodInfo, "LogIn") || strings.Contains(methodInfo, "SignUp") {
 		return handler(ctx, req)
@@ -42,8 +40,8 @@ func AuthInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServe
 		log.Printf("invalid token: %s", tokenFromReq)
 		return nil, status.Errorf(codes.Unauthenticated, "Неверный auth-token")
 	}
-	fmt.Println(tokenFromReq)
-	//header := metadata.Pairs("userID", userID) //в key нельзя ставить пробел
-	ctx = metadata.AppendToOutgoingContext(ctx, "userID", userID)
-	return handler(ctx, req)
+
+	newContext := context.WithValue(ctx, "userID", userID)
+
+	return handler(newContext, req)
 }

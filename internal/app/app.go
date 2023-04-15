@@ -60,12 +60,10 @@ func New() (*App, error) {
 	}
 	var s *grpc.Server
 	if cfg.Debug == true {
-		s = grpc.NewServer(grpc.UnaryInterceptor(server.AuthInterceptor))
-		//s = grpc.NewServer()
-
+		s = grpc.NewServer(grpc.UnaryInterceptor(authServer.AuthInterceptor))
 	} else {
 		s = grpc.NewServer(
-			grpc.UnaryInterceptor(server.AuthInterceptor),
+			grpc.UnaryInterceptor(authServer.AuthInterceptor),
 			grpc.Creds(tlsCredentials),
 		)
 	}
