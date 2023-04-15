@@ -81,6 +81,25 @@ func (k *KeeperService) CreateRecord(ctx context.Context, in *pb.CreateRecordReq
 	return resp, nil
 }
 
+func (k *KeeperService) GetRecord(ctx context.Context, in *pb.GetRecordRequest) (*pb.GetRecordResponse, error) {
+	userID, err := getUserIDFromContext(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Unauthenticated, "auth error")
+	}
+
+	record, err := k.Service.GetRecord(ctx, in.Id, userID)
+	if err != nil {
+		return nil, status.Error(codes.Internal, "internal error")
+	}
+	resp := &pb.GetRecordResponse{
+		Id:   record.Id,
+		Name: record.Name,
+		Type: record.Type,
+		Data: record.Data,
+	}
+	return resp, nil
+}
+
 func (k *KeeperService) EditRecord(ctx context.Context, in *pb.EditRecordRequest) (*pb.EditRecordResponse, error) {
 	userID, err := getUserIDFromContext(ctx)
 	if err != nil {
