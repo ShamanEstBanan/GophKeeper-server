@@ -16,12 +16,13 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-type service interface {
+//go:generate mockgen -destination=./mock/service.go -package=mock . Service
+type Service interface {
 	SignUp(context.Context, entity.User) error
 	LogIn(context.Context, entity.User) (string, error)
 }
 type AuthServer struct {
-	Service service
+	Service Service
 	pb.UnimplementedAuthServiceServer
 }
 

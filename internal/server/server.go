@@ -7,9 +7,8 @@ import (
 	pb "ShamanEstBanan-GophKeeper-server/internal/proto"
 )
 
-type service interface {
-	SignUp(context.Context, entity.User) error
-	LogIn(context.Context, entity.User) (string, error)
+//go:generate mockgen -destination=./mock/service.go -package=mock . Service
+type Service interface {
 	GetAllRecords(context.Context, entity.UserID) (*[]entity.RecordInfo, error)
 	GetRecordsByType(ctx context.Context, userID entity.UserID, datatype entity.DataType) (*[]entity.RecordInfo, error)
 	CreateRecord(context.Context, entity.Record) (*entity.Record, error)
@@ -18,6 +17,6 @@ type service interface {
 	DeleteRecord(context.Context, entity.RecordID, entity.UserID) error
 }
 type KeeperService struct {
-	Service service
+	Service Service
 	pb.UnimplementedKeeperServiceServer
 }

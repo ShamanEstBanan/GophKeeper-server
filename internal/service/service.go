@@ -8,7 +8,8 @@ import (
 	"go.uber.org/zap"
 )
 
-type storage interface {
+//go:generate mockgen -destination=./mock/storage.go -package=mock . Storage
+type Storage interface {
 	CreateUser(context.Context, entity.User) error
 	AuthenticateUser(context.Context, entity.User) (entity.UserID, error)
 	GetAllRecords(context.Context, entity.UserID) (*[]entity.RecordInfo, error)
@@ -21,10 +22,10 @@ type storage interface {
 
 type service struct {
 	lg      *zap.Logger
-	storage storage
+	storage Storage
 }
 
-func New(lg *zap.Logger, storage storage) *service {
+func New(lg *zap.Logger, storage Storage) *service {
 	return &service{
 		lg:      lg,
 		storage: storage,
