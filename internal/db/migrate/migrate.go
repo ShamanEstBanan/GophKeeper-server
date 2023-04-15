@@ -3,6 +3,7 @@ package migrate
 import (
 	"database/sql"
 	"fmt"
+
 	_ "github.com/jackc/pgx/v4/stdlib"
 	"github.com/pressly/goose/v3"
 )

@@ -1,18 +1,19 @@
 package storage
 
 import (
+	"context"
+	"time"
+
 	"ShamanEstBanan-GophKeeper-server/internal/domain/entity"
 	"ShamanEstBanan-GophKeeper-server/internal/errs"
-	"context"
+
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5/pgconn"
-	"time"
 )
 
 var ErrNoRows = "no rows in result set"
 
 func (s *storage) GetAllRecords(ctx context.Context, userID entity.UserID) (*[]entity.RecordInfo, error) {
-
 	ctx, cancel := context.WithTimeout(ctx, defaultTimeout)
 	defer cancel()
 
@@ -105,7 +106,6 @@ func (s *storage) CreateRecord(ctx context.Context, record entity.Record) (*enti
 }
 
 func (s *storage) UpdateRecord(ctx context.Context, record entity.Record) (*entity.Record, error) {
-
 	ctx, cancel := context.WithTimeout(ctx, defaultTimeout)
 	defer cancel()
 

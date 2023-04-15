@@ -35,8 +35,7 @@ type RecordInfo struct {
 	Name string   `json:"name"`
 	Type DataType `json:"type"`
 }
-type GetAllRecordsRequest struct {
-}
+type GetAllRecordsRequest struct{}
 
 type GetAllRecordsResponse struct {
 	Records []RecordInfo `json:"records"`

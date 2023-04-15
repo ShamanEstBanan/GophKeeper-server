@@ -1,13 +1,14 @@
 package app
 
 import (
-	"ShamanEstBanan-GophKeeper-server/internal/server/authServer"
 	"context"
 	"crypto/tls"
 	"log"
 	"net"
 	"os/signal"
 	"syscall"
+
+	"ShamanEstBanan-GophKeeper-server/internal/server/authServer"
 
 	"ShamanEstBanan-GophKeeper-server/internal/config"
 	"ShamanEstBanan-GophKeeper-server/internal/db/migrate"
@@ -85,7 +86,6 @@ func New() (*App, error) {
 }
 
 func (a App) Run() error {
-
 	_, cancel := signal.NotifyContext(
 		context.Background(),
 		syscall.SIGINT,
@@ -101,8 +101,10 @@ func (a App) Run() error {
 	return err
 }
 
-const serverCert = "internal/app/certs/server-cert.pem"
-const serverKey = "internal/app/certs/server-key.pem"
+const (
+	serverCert = "internal/app/certs/server-cert.pem"
+	serverKey  = "internal/app/certs/server-key.pem"
+)
 
 func loadTLSCredentials() (credentials.TransportCredentials, error) {
 	// Load server's certificate and private key

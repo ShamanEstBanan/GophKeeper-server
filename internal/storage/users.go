@@ -37,7 +37,7 @@ func (s *storage) AuthenticateUser(ctx context.Context, user entity.User) (userI
 	defer cancel()
 
 	var exist bool
-	//Проверка, есть ли записи с указанными логином и паролем
+	// Проверка, есть ли записи с указанными логином и паролем
 	query := fmt.Sprintf(
 		"SELECT password = '%s' AS pswmatch FROM users WHERE login = '%s'",
 		user.Password, user.Login)

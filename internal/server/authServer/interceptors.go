@@ -1,12 +1,13 @@
 package authServer
 
 import (
-	"ShamanEstBanan-GophKeeper-server/internal/errs"
-	"ShamanEstBanan-GophKeeper-server/internal/utils/authtoken"
 	"context"
 	"errors"
 	"log"
 	"strings"
+
+	"ShamanEstBanan-GophKeeper-server/internal/errs"
+	"ShamanEstBanan-GophKeeper-server/internal/utils/authtoken"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"

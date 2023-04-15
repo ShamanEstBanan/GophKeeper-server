@@ -13,8 +13,8 @@ type Config struct {
 	Debug       bool   `env:"DEBUG_MODE" envDefault:"false"`
 
 	// если вдруг понадобится воркер-пулл
-	//JobCount    int    `env:"JOB_COUNT" envDefault:"50"`
-	//Concurrency int    `env:"CONCURRENCY" envDefault:"10"`
+	// JobCount    int    `env:"JOB_COUNT" envDefault:"50"`
+	// Concurrency int    `env:"CONCURRENCY" envDefault:"10"`
 }
 
 func New() *Config {

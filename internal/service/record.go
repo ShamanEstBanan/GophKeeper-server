@@ -1,10 +1,11 @@
 package service
 
 import (
-	"ShamanEstBanan-GophKeeper-server/internal/domain/entity"
-	"ShamanEstBanan-GophKeeper-server/internal/errs"
 	"context"
 	"fmt"
+
+	"ShamanEstBanan-GophKeeper-server/internal/domain/entity"
+	"ShamanEstBanan-GophKeeper-server/internal/errs"
 )
 
 func (s *service) GetAllRecords(ctx context.Context, userID entity.UserID) (*[]entity.RecordInfo, error) {

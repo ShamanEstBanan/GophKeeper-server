@@ -1,17 +1,18 @@
 package server
 
 import (
+	"context"
+	"errors"
+
 	"ShamanEstBanan-GophKeeper-server/internal/domain/entity"
 	"ShamanEstBanan-GophKeeper-server/internal/errs"
 	pb "ShamanEstBanan-GophKeeper-server/internal/proto"
-	"context"
-	"errors"
+
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
 
 func (k *KeeperService) GetAllRecords(ctx context.Context, in *pb.GetAllRecordsRequest) (*pb.GetAllRecordsResponse, error) {
-
 	userID, err := getUserIDFromContext(ctx)
 	if err != nil {
 		return nil, err

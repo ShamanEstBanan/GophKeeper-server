@@ -1,17 +1,19 @@
 package authServer
 
 import (
-	"ShamanEstBanan-GophKeeper-server/internal/domain/entity"
-	"ShamanEstBanan-GophKeeper-server/internal/errs"
-	pb "ShamanEstBanan-GophKeeper-server/internal/proto"
 	"context"
 	"errors"
 	"fmt"
+	"log"
+
+	"ShamanEstBanan-GophKeeper-server/internal/domain/entity"
+	"ShamanEstBanan-GophKeeper-server/internal/errs"
+	pb "ShamanEstBanan-GophKeeper-server/internal/proto"
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-	"log"
 )
 
 type service interface {
@@ -77,7 +79,7 @@ func (k *AuthServer) LogIn(ctx context.Context, in *pb.LogInRequest) (*pb.LogInR
 		}
 	}
 
-	header := metadata.Pairs("jwt-token", token) //в key нельзя ставить пробел
+	header := metadata.Pairs("jwt-token", token) // в key нельзя ставить пробел
 	err = grpc.SendHeader(ctx, header)
 
 	return &resp, nil

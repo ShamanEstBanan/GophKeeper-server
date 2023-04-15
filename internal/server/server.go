@@ -1,9 +1,10 @@
 package server
 
 import (
+	"context"
+
 	"ShamanEstBanan-GophKeeper-server/internal/domain/entity"
 	pb "ShamanEstBanan-GophKeeper-server/internal/proto"
-	"context"
 )
 
 type service interface {

@@ -1,10 +1,12 @@
 package service
 
 import (
+	"context"
+
 	"ShamanEstBanan-GophKeeper-server/internal/domain/entity"
 	"ShamanEstBanan-GophKeeper-server/internal/errs"
 	"ShamanEstBanan-GophKeeper-server/internal/utils/authtoken"
-	"context"
+
 	"go.uber.org/zap"
 )
 
