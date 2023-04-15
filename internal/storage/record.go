@@ -2,10 +2,14 @@ package storage
 
 import (
 	"ShamanEstBanan-GophKeeper-server/internal/domain/entity"
+	"ShamanEstBanan-GophKeeper-server/internal/errs"
 	"context"
-	"fmt"
+	"github.com/jackc/pgerrcode"
+	"github.com/jackc/pgx/v5/pgconn"
 	"time"
 )
+
+var ErrNoRows = "no rows in result set"
 
 func (s *storage) GetAllRecords(ctx context.Context, userID entity.UserID) (*[]entity.RecordInfo, error) {
 
@@ -63,6 +67,16 @@ func (s *storage) GetRecord(ctx context.Context, recordID entity.RecordID, userI
 	}
 	err := rows.Scan(&rec.Name, &rec.Type, &rec.Data)
 	if err != nil {
+		if err.Error() == ErrNoRows {
+			return nil, errs.ErrNotFound
+		}
+		switch e := err.(type) {
+		case *pgconn.PgError:
+			switch e.Code {
+			case pgerrcode.InvalidTextRepresentation:
+				return nil, errs.ErrInvalidRecordID
+			}
+		}
 		return nil, err
 	}
 
@@ -73,11 +87,11 @@ func (s *storage) CreateRecord(ctx context.Context, record entity.Record) (*enti
 	ctx, cancel := context.WithTimeout(ctx, defaultTimeout)
 	defer cancel()
 
-	query := `INSERT INTO records (user_id, datatype, data, created_at, updated_at) VALUES ($1, $2, $3, $4,$5) RETURNING records.id`
+	query := `INSERT INTO records (user_id, name, datatype, data, created_at, updated_at) 
+			VALUES ($1, $2, $3, $4,$5,$6) RETURNING records.id`
 
 	var recordID string
-	err := s.db.QueryRow(ctx, query, record.UserID, record.Type, record.Data, time.Now(), time.Now()).Scan(&recordID)
-	fmt.Println(err)
+	err := s.db.QueryRow(ctx, query, record.UserID, record.Name, record.Type, record.Data, time.Now(), time.Now()).Scan(&recordID)
 	if err != nil {
 		return nil, err
 	}

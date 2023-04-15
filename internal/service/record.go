@@ -40,6 +40,9 @@ func (s *service) GetRecord(ctx context.Context, recID entity.RecordID, userID e
 }
 
 func (s *service) UpdateRecord(ctx context.Context, rec entity.Record) (*entity.Record, error) {
+	if rec.Id == "" {
+		return nil, fmt.Errorf("%w:%s", errs.ErrInvalidRecordInfo, errs.ErrInvalidRecordInfo)
+	}
 	err := validateRecord(rec)
 	if err != nil {
 		return nil, err
@@ -53,13 +56,13 @@ func (s *service) DeleteRecord(ctx context.Context, recID entity.RecordID, userI
 
 func validateRecord(record entity.Record) error {
 	if record.Name == "" {
-		return fmt.Errorf("validationd error: %w", errs.ErrEmptyNameInRecord)
+		return fmt.Errorf("%w:%s", errs.ErrInvalidRecordInfo, errs.ErrEmptyNameInRecord)
 	}
 	if record.Type == "" {
-		return fmt.Errorf("validationd error: %w", errs.ErrEmptyTypeInRecord)
+		return fmt.Errorf("%w:%s", errs.ErrInvalidRecordInfo, errs.ErrEmptyTypeInRecord)
 	}
 	if record.Data == nil {
-		return fmt.Errorf("validationd error: %w", errs.ErrEmptyDataInRecord)
+		return fmt.Errorf("%w:%s", errs.ErrInvalidRecordInfo, errs.ErrEmptyDataInRecord)
 	}
 	return nil
 }

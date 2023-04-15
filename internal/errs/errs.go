@@ -15,6 +15,8 @@ var (
 	ErrEmptyTypeInRecord      = errors.New("empty type in record")
 	ErrEmptyDataInRecord      = errors.New("empty data in record")
 	ErrNotFound               = errors.New("not found")
+	ErrInvalidRecordID        = errors.New("invalid record ID")
+	ErrInvalidRecordInfo      = errors.New("validation error")
 )
 
 type SQLError struct {

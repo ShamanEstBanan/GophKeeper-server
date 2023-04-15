@@ -15,8 +15,8 @@ import (
 )
 
 type service interface {
-	SignUp(context.Context, *entity.User) error
-	LogIn(context.Context, *entity.User) (string, error)
+	SignUp(context.Context, entity.User) error
+	LogIn(context.Context, entity.User) (string, error)
 }
 type AuthServer struct {
 	Service service
@@ -25,7 +25,7 @@ type AuthServer struct {
 
 func (k *AuthServer) SignUp(ctx context.Context, in *pb.SignUpRequest) (*pb.SignUpResponse, error) {
 	var resp pb.SignUpResponse
-	user := &entity.User{
+	user := entity.User{
 		UserID:   "",
 		Login:    in.Login,
 		Password: in.Password,
@@ -60,7 +60,7 @@ func (k *AuthServer) LogIn(ctx context.Context, in *pb.LogInRequest) (*pb.LogInR
 		}
 	}
 
-	user := &entity.User{
+	user := entity.User{
 		UserID:   "",
 		Login:    in.Login,
 		Password: in.Password,

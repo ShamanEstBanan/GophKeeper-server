@@ -2,8 +2,10 @@ package server
 
 import (
 	"ShamanEstBanan-GophKeeper-server/internal/domain/entity"
+	"ShamanEstBanan-GophKeeper-server/internal/errs"
 	pb "ShamanEstBanan-GophKeeper-server/internal/proto"
 	"context"
+	"errors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -70,6 +72,9 @@ func (k *KeeperService) CreateRecord(ctx context.Context, in *pb.CreateRecordReq
 	}
 	createdRecord, err := k.Service.CreateRecord(ctx, record)
 	if err != nil {
+		if errors.Is(err, errs.ErrInvalidRecordInfo) {
+			return nil, status.Error(codes.InvalidArgument, err.Error())
+		}
 		return nil, status.Error(codes.Internal, "internal error")
 	}
 	resp := &pb.CreateRecordResponse{
@@ -89,6 +94,12 @@ func (k *KeeperService) GetRecord(ctx context.Context, in *pb.GetRecordRequest) 
 
 	record, err := k.Service.GetRecord(ctx, in.Id, userID)
 	if err != nil {
+		if errors.Is(err, errs.ErrNotFound) {
+			return nil, status.Error(codes.NotFound, "record not found")
+		}
+		if errors.Is(err, errs.ErrInvalidRecordID) {
+			return nil, status.Error(codes.InvalidArgument, "invalid id")
+		}
 		return nil, status.Error(codes.Internal, "internal error")
 	}
 	resp := &pb.GetRecordResponse{
@@ -106,7 +117,7 @@ func (k *KeeperService) EditRecord(ctx context.Context, in *pb.EditRecordRequest
 		return nil, status.Error(codes.Unauthenticated, "auth error")
 	}
 	record := entity.Record{
-		Id:     "",
+		Id:     in.Id,
 		Name:   in.Name,
 		Type:   in.Type,
 		Data:   in.Data,
@@ -114,6 +125,9 @@ func (k *KeeperService) EditRecord(ctx context.Context, in *pb.EditRecordRequest
 	}
 	updatedRecord, err := k.Service.UpdateRecord(ctx, record)
 	if err != nil {
+		if errors.Is(err, errs.ErrInvalidRecordInfo) {
+			return nil, status.Error(codes.InvalidArgument, err.Error())
+		}
 		return nil, status.Error(codes.Internal, "internal error")
 	}
 	resp := &pb.EditRecordResponse{
@@ -134,7 +148,8 @@ func (k *KeeperService) DeleteRecord(ctx context.Context, in *pb.DeleteRecordReq
 	if err != nil {
 		return nil, status.Error(codes.NotFound, "data not found")
 	}
-	return nil, nil
+	var resp pb.DeleteRecordResponse
+	return &resp, nil
 }
 
 func buildRecordsResponce(records []entity.RecordInfo) []*pb.GetAllRecordsResponse_Record {

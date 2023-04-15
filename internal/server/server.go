@@ -7,8 +7,8 @@ import (
 )
 
 type service interface {
-	CreateUser(context.Context, entity.User) error
-	AuthenticateUser(context.Context, entity.User) (*entity.UserID, error)
+	SignUp(context.Context, entity.User) error
+	LogIn(context.Context, entity.User) (string, error)
 	GetAllRecords(context.Context, entity.UserID) (*[]entity.RecordInfo, error)
 	GetRecordsByType(ctx context.Context, userID entity.UserID, datatype entity.DataType) (*[]entity.RecordInfo, error)
 	CreateRecord(context.Context, entity.Record) (*entity.Record, error)

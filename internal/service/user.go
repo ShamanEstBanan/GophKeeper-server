@@ -8,7 +8,7 @@ import (
 	"go.uber.org/zap"
 )
 
-func (s *service) CreateUser(ctx context.Context, user entity.User) error {
+func (s *service) SignUp(ctx context.Context, user entity.User) error {
 	err := ValidateUser(user)
 	if err != nil {
 		s.lg.Error("Validation error:", zap.Error(err))
@@ -22,23 +22,23 @@ func (s *service) CreateUser(ctx context.Context, user entity.User) error {
 	return nil
 }
 
-func (s *service) AuthenticateUser(ctx context.Context, user entity.User) (*entity.UserID, error) {
+func (s *service) LogIn(ctx context.Context, user entity.User) (string, error) {
 	err := ValidateUser(user)
 	if err != nil {
 		s.lg.Error("Validation error:", zap.Error(err))
-		return nil, err
+		return "", err
 	}
 	userID, err := s.storage.AuthenticateUser(ctx, user)
 	if err != nil {
 		s.lg.Error("Authenticate user error:", zap.Error(err))
-		return nil, err
+		return "", err
 	}
 	token, err := authtoken.GenerateToken(userID)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
-	return &token, nil
+	return token, nil
 }
 
 func ValidateUser(user entity.User) error {
