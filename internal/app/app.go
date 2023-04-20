@@ -93,6 +93,7 @@ func (a App) Run() error {
 	)
 	defer cancel()
 
+	//TODO убрать в конфиг
 	listener, err := net.Listen("tcp", ":3080")
 	if err = a.server.Serve(listener); err != nil {
 		log.Fatal(err)

@@ -10,7 +10,7 @@ import (
 type Config struct {
 	RunAddress  string `env:"RUN_ADDRESS"`
 	PostgresDSN string `env:"DATABASE_URI"`
-	Debug       bool   `env:"DEBUG_MODE" envDefault:"false"`
+	Debug       bool   `env:"DEBUG_MODE" envDefault:"true"`
 
 	// если вдруг понадобится воркер-пулл
 	// JobCount    int    `env:"JOB_COUNT" envDefault:"50"`
